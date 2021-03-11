@@ -38,6 +38,7 @@ public abstract class ProcessorChain<T extends Processor<R>, R> {
 
     public void init() {
         processors.sort(Comparator.comparing(this::getOrderNumber));
+        logProcessors();
     }
 
     public void handle(R target) throws ChainInterruptedException {

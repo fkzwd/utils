@@ -51,5 +51,6 @@ public class ChainAutoConfigurer implements BeanPostProcessor {
                 });
             }
         });
+        chainMap.forEach((kl, chainList) -> chainList.forEach(ProcessorChain::init));
     }
 }
