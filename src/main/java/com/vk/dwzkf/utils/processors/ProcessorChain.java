@@ -1,9 +1,11 @@
 package com.vk.dwzkf.utils.processors;
 
+import com.vk.dwzkf.utils.processors.exception.ChainInterruptedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -12,11 +14,33 @@ public abstract class ProcessorChain<T extends Processor<R>, R> {
     protected final List<T> processors;
 
     public ProcessorChain(List<T> processors) {
+        if (processors == null) {
+            throw new IllegalArgumentException("Processors cannot be null");
+        }
         processors.sort(Comparator.comparing(this::getOrderNumber));
         this.processors = processors;
     }
 
-    public void handle(R target) {
+    public ProcessorChain() {
+        processors = new ArrayList<>();
+    }
+
+    public void addProcessor(T processor) {
+        if (processor == null) {
+            throw new IllegalArgumentException("Processor cannot be null.");
+        }
+        processors.add(processor);
+    }
+
+    public boolean containsProcessor(T processor) {
+        return processors.contains(processor);
+    }
+
+    public void init() {
+        processors.sort(Comparator.comparing(this::getOrderNumber));
+    }
+
+    public void handle(R target) throws ChainInterruptedException {
         ChainValidator chainValidator = new ChainValidator();
         processors.forEach(p -> {
             try {
@@ -44,6 +68,8 @@ public abstract class ProcessorChain<T extends Processor<R>, R> {
                 p, this)
         );
     }
+
+    public abstract Class<R> getTargetClass();
 
     /**
      * Add supporting set order without name like {@link ProcessorOrder#value()}
