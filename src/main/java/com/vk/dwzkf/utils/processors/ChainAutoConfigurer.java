@@ -36,7 +36,7 @@ public class ChainAutoConfigurer implements BeanPostProcessor {
                     Class chainProcessorTargetKlass = processorChain.getTargetClass();
                     Class processorTargetKlass = processor.getTargetClass();
                     if (chainProcessorTargetKlass != null && processorTargetKlass != null) {
-                        if (chainProcessorTargetKlass.isAssignableFrom(processorTargetKlass)) {
+                        if (processorTargetKlass.isAssignableFrom(chainProcessorTargetKlass)) {
                             if (processorChain.containsProcessor(processor)) {
                                 log.info("Processor {} already included in chain {}",
                                         processor,
