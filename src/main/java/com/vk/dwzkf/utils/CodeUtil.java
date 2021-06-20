@@ -3,6 +3,8 @@ package com.vk.dwzkf.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class CodeUtil {
@@ -111,6 +113,42 @@ public class CodeUtil {
                 throw badArgument();
             }
         }
+    }
+
+    public static boolean equalsAny(String target, String... matchers) {
+        checkNotNull(target);
+        for (String s : matchers) {
+            if (target.equals(s)) return true;
+        }
+        return false;
+    }
+
+    public static boolean isAnyBlank(String... strings) {
+        if (!isAnyNull(Arrays.asList(strings))) {
+            for (String s : strings) {
+                if (s.isBlank()) return true;
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean isAnyNull(Object... object) {
+        for (Object o : object) {
+            if (o == null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isAnyNull(List<Object> objects) {
+        for (Object o : objects) {
+            if (o == null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static IllegalArgumentException badArgument() {
