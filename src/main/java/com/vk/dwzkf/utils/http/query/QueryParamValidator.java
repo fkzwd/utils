@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 public abstract class QueryParamValidator {
-    public abstract QueryEntityType type();
+    public abstract Class<? extends QueryParamValidator> type();
 
     public abstract void validate(List<QueryEntity<?>> entites) throws QueryValidationException;
 }

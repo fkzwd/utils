@@ -3,21 +3,25 @@ package com.vk.dwzkf.utils.http.query;
 import com.vk.dwzkf.utils.http.query.exception.ParsingException;
 import com.vk.dwzkf.utils.http.query.exception.ParsingFormatException;
 import com.vk.dwzkf.utils.http.query.exception.UnsupportedFormatException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class QueryEntityResolver {
     private static final String OPEN_BRACE_REGEX = "\\[";
     private static final String CLOSE_BRACE_REGEX = "]";
     private static final String OPEN_BRACE = "[";
     private static final String CLOSE_BRACE = "]";
 
+    private final QueryEntityTypes queryEntityTypes;
+
     public List<? extends QueryEntity<?>> resolve(String name, String value) throws ParsingException, ParsingFormatException {
         String type = typeFromName(name);
         String subtype = subTypeFromName(name);
-        QueryEntityType element = QueryEntityType.byType(type);
+        QueryEntityType element = queryEntityTypes.byTypeName(type);
         try {
             element.validate(subtype, value);
         } catch (UnsupportedFormatException exception) {

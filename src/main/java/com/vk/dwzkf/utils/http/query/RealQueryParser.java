@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class RealQueryParser implements QueryParser {
 
     private final QueryEntityResolver resolver;
-    private final Map<QueryEntityType, QueryParamValidator> validators = new ConcurrentHashMap<>();
+    private final Map<Class<? extends QueryParamValidator>, QueryParamValidator> validators = new ConcurrentHashMap<>();
 
     @Autowired
     public void registerValidators(List<QueryParamValidator> validatorsList) {
@@ -76,7 +76,7 @@ public class RealQueryParser implements QueryParser {
                 .forEach(this::validateQueryParams);
     }
 
-    private void validateQueryParams(QueryEntityType queryType, List<QueryEntity<?>> entities) {
+    private void validateQueryParams(Class<? extends QueryParamValidator> queryType, List<QueryEntity<?>> entities) {
         QueryParamValidator validator = validators.get(queryType);
         if (validator != null) {
             validator.validate(entities);
